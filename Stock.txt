@@ -1,0 +1,4 @@
+phone,200,30 
+laptop,900,49 
+HDD,200,40
+Desktop, 240, 32

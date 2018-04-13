@@ -1,0 +1,12 @@
+=================================================================
+Invoice
+Your purchase was performed on date and time: 2018-04-13 21:29:20.862476
+Code of the bill: 233
+Name:phone
+Address:Jhapa
+Price without discount = 20700
+Discount % = 10% 
+Amount to be paid with discount 18630.0
+Product bought are:
+1:phone
+2:laptop
