@@ -1,75 +1,84 @@
-import First
 import datetime
+import sys
 import random
+from pathlib import Path
 
-num = 0
-price = 0
+from SecondSection.CMDShop import First
+
 stock = First.order()
-for each in stock:
-    print(each)
-Product = []
-Name = input("Enter name:")
-Address = input("Enter address:")
-ans = input("Do you want to buy ? (Y or N)\n")
-while ans == "y":
-    Product.append(input("Enter product:"))
-    qt = int(input("How many do you want??\n"))
+
+
+# for each in stock:
+#     print(each)
+def display_product(names):
+    print("{} product are : ".format(names))
+    for products in stock:
+        print("Name : {}".format(products[0]))
+
+
+product_name = []
+max_row = len(stock)
+# print(max_row)
+display_product("Our")
+is_found = False
+updated_product_number = 0
+price_of_product = 0
+name = ""
+
+# user_name = input("Enter your name ")
+# print("Welcome to the shop : {}".format(user_name))
+
+yes_or_no_option = input("Do you want to start the shopping? Y or N").lower()
+while yes_or_no_option == "y":
     row = 0
-    while row < 5:
-        if Product[num] == stock[row][0]:
+    num = 0
+    name = input("Enter your product Name : ")
+    product_name.append(name)
+
+    while row < max_row:
+        if product_name[num] == stock[row][0]:
+            is_found = True
+            print("Your product found.")
             break
         else:
+
             row = row + 1
     num = num + 1
 
-    dummy = int(stock[row][2])
+    if not is_found:
+        print("We are exiting.")
+        sys.exit(0)
+
+    number_of_items = int(input("Enter the number of product you want to buy ? "))
     if stock[row][2] == "0":
-        print("Sry we are short of product")
-        ans = input("Do u want anything else??")
-    elif dummy < qt:
-        bts = input("Do u want to decrease quantity?(y for yes and n for no)\n")
-        if bts == "y":
-            qt = int(input("Enter  new quantity!!\n"))
-            change = int(stock[row][2]) - qt
-            stock[row][2] = str(change)
-            price = price + qt * (int(stock[row][1]))
-            print("Remaining products are given")
-            for each in stock:
-                print(each)
-            ans = input("Do u again want to buy anything???(y for yes/n for no)!!\n")
+        print("We are out of product")
+    elif number_of_items > int(stock[row][2]):
+        print("We have only {} items here....\nWant to reduce the number of product".format(stock[row][2]))
+        yes_or_no = input("Yes or no").lower()
+        if yes_or_no == "yes":
+            new_product_number = int(input("Enter your product number"))
+            if new_product_number < int(stock[row][2]):
+                updated_product_number = int(stock[row][2]) - new_product_number
+                price_of_product = int(stock[row][1]) * number_of_items
+                stock[row][2] = str(updated_product_number)
+                display_product("Other")
+                yes_or_no_option = input("Do you want to want to shop again? Y or N")
+            else:
+                print("We are again out of number in this product")
+        else:
+            print("Ok, Continue then.")
     else:
-        change = int(stock[row][2]) - qt
-        stock[row][2] = str(change)
-        price = price + qt * (int(stock[row][1]))
-        print("Remaining products are given")
-        for each in stock:
-            print(each)
-        ans = input("Do u again want to buy anything???(y for yes/n for no)!!\n")
-
-if ans == "n":
-    print("Thanks for visiting")
-    file = open("Invoice.txt", "w")
-
-    (datetime.datetime.now())
-
-    (random.randint(1, 1000))
-    file.write("=================================================================")
-    file.write("\n")
-    file.write("Invoice")
-    file.write("\n")
-    file.write("Your purchase was performed on date and time: " + str(datetime.datetime.now()))
-    file.write("\n")
-    file.write("Code of the bill: " + str(random.randint(1, 1000)) + "\n")
-    file.write("Name:" + Name + "\n")
-    file.write("Address:" + Address + "\n")
-    file.write("Price without discount = " + str(price) + "\n")
-    file.write("Discount % = 10% \n")
-    priceWithDiscount = price - ((10 / 100) * price)
-    file.write("Amount to be paid with discount " + str(priceWithDiscount) + "\n")
-    file.write("Product bought are:\n")
-    k = 1
-    for each in Product:
-        file.write(str(k) + ":" + each + "\n")
-        k = k + 1
-
-    file.close()
+        updated_product_number = (int(stock[row][2]) - number_of_items)
+        stock[row][2] = str(updated_product_number)
+        price_of_product = int(stock[row][1]) * number_of_items
+        yes_or_no_option = input("Do you want to want to shop again? Y or N")
+if yes_or_no_option == "n":
+    modes = "w+"
+    my_file = Path("Print.txt")
+    if my_file.is_file():
+        modes = "a"
+    with open("Print.txt", modes) as print_text:
+        for i in product_name:
+            print("Date of purchase: {0}\nThe code of this product is : {1}\nPrice of product {2}".format(
+                datetime.datetime.now(), random.randint(1, 1000), price_of_product), file=print_text)
+            print("Name  {}".format(i), file=print_text)
